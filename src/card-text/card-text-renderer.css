@@ -1,0 +1,37 @@
+.card-desc-custom {
+  color: #777777;
+}
+
+.card-desc-custom .materials {
+  padding-bottom: 4px;
+}
+
+.card-desc-custom ol {
+  padding-left: 14px;
+}
+
+.card-desc-custom li {
+  padding-bottom: 5px;
+}
+
+.card-desc-custom .condition {
+  color: #3abf38; /* green */
+}
+
+.card-desc-custom .activation {
+  color: #c322a3; /* pink */
+}
+
+.card-desc-custom .effect-chainable {
+  color: #bfb438; /* yellow */
+}
+
+.card-desc-custom .quick-effect {
+  color: rgb(137 144 238);
+}
+
+.card-desc-custom .pendulum-effect,
+.card-desc-custom .monster-effect,
+.card-desc-custom .monster-flavor {
+  color: rgb(255, 255, 255);
+}
