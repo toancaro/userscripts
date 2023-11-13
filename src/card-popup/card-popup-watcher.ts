@@ -45,23 +45,19 @@ export class CardPopupWatcher {
     cardDescContainer.dataset.processed = 'true';
 
     const cardTexts: string[] = [];
-    const descSpans = cardDescContainer.querySelectorAll<HTMLElement>(`span`);
+    cardDescContainer.childNodes.forEach((level1Child) => {
+      level1Child.childNodes.forEach((level2Child) => {
+        let text = level2Child.textContent;
 
-    descSpans.forEach((descSpan) => {
-      const effTexts = Array.from(descSpan.childNodes)
-        .map((textNode) => {
-          return textNode.textContent || '';
-        })
-        // Remove empty string
-        .filter((text) => {
-          return !/^\s*$/.test(text);
-        })
-        // Prepend $MATERIALS$ before
-        .map((text) => {
-          return descSpan.classList.contains('materials') ? PREFIX_MATERIALS + text : text;
-        });
+        // Not null and not white spaces
+        if (text && !/^\s*$/.test(text)) {
+          if (level1Child instanceof HTMLElement && level1Child.classList.contains('materials')) {
+            text = PREFIX_MATERIALS + text;
+          }
 
-      cardTexts.push(...effTexts);
+          cardTexts.push(text);
+        }
+      });
     });
 
     const tokens = new CardTextProcessor(cardTexts).process();
