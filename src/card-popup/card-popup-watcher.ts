@@ -1,9 +1,9 @@
 import { CardTextProcessor } from '../card-text/card-text-processor';
 import { CardTextRenderer } from '../card-text/card-text-renderer';
+import styles from '../card-text/card-text-renderer.css';
 import { assertIsDefined } from '../utils/assertion';
 import { PREFIX_MATERIALS } from '../utils/constants';
 import { logger } from '../utils/logger';
-import styles from '../card-text/card-text-renderer.css';
 
 export class CardPopupWatcher {
   private readonly observer: MutationObserver;

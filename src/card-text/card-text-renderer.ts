@@ -1,9 +1,10 @@
+import { assertIsDefined } from '../utils/assertion';
 import { logger } from '../utils/logger';
 import { utils } from '../utils/utils';
 import {
   ActivationToken,
   ConditionToken,
-  EffectToken,
+  ChainableEffectToken,
   MaterialsToken,
   MonsterEffectToken,
   MonsterFlavorToken,
@@ -12,8 +13,9 @@ import {
   QuickEffectToken,
   TokenBase,
   UnknownToken,
+  InherentEffectToken,
+  BulletToken,
 } from './card-text-token';
-import { assertIsDefined } from '../utils/assertion';
 
 export class CardTextRenderer {
   private currOl?: HTMLOListElement;
@@ -57,12 +59,20 @@ export class CardTextRenderer {
         this.handleActivation(currToken, prevToken);
       }
       //
-      else if (currToken instanceof EffectToken) {
-        this.handleEffect(currToken, prevToken);
+      else if (currToken instanceof ChainableEffectToken) {
+        this.handleChainableEffect(currToken);
+      }
+      //
+      else if (currToken instanceof InherentEffectToken) {
+        this.handleInherentEffect(currToken, prevToken);
       }
       //
       else if (currToken instanceof ParenthesisToken) {
         this.handleParenthesis(currToken);
+      }
+      //
+      else if (currToken instanceof BulletToken) {
+        this.handleBullet(currToken);
       }
       //
       else if (currToken instanceof QuickEffectToken) {
@@ -78,8 +88,8 @@ export class CardTextRenderer {
   private handleCondition(currToken: ConditionToken, prevToken: ActivationToken | null) {
     this.createNewOList({ onlyWhenNull: true });
 
-    // Condition always starts new <li> if previous token is not a (Quick Effect)
-    if (!(prevToken instanceof QuickEffectToken)) {
+    // Condition always starts new <li> if previous token is not a (Quick Effect) or a bullet ●
+    if (!(prevToken instanceof QuickEffectToken || prevToken instanceof BulletToken)) {
       this.createNewLI({ onlyWhenNull: false });
     }
 
@@ -90,8 +100,15 @@ export class CardTextRenderer {
   private handleActivation(currToken: ActivationToken, prevToken: ActivationToken | null) {
     this.createNewOList({ onlyWhenNull: true });
 
-    // Only create new li if previous token is null, or NOT a activation
-    if (prevToken == null || !(prevToken instanceof ConditionToken || prevToken instanceof QuickEffectToken)) {
+    // Only create new li if previous token is null, ...
+    if (
+      prevToken == null ||
+      !(
+        prevToken instanceof ConditionToken ||
+        prevToken instanceof QuickEffectToken ||
+        prevToken instanceof BulletToken
+      )
+    ) {
       this.createNewLI({ onlyWhenNull: false });
     }
 
@@ -101,29 +118,28 @@ export class CardTextRenderer {
     this.currLi!.appendChild(span);
   }
 
-  private handleEffect(currToken: EffectToken, prevToken: ActivationToken | null) {
+  private handleChainableEffect(currToken: ChainableEffectToken) {
+    const span = utils.htmlToElement(`<span class="effect-chainable"> ${currToken.getText()}</span>`);
+    this.currLi!.appendChild(span);
+  }
+
+  private handleInherentEffect(currToken: InherentEffectToken, prevToken: ActivationToken | null) {
     this.createNewOList({ onlyWhenNull: true });
 
-    // Only create new li if previous token is null, or NOT a activation or condtion
-    if (prevToken == null || !(prevToken instanceof ConditionToken || prevToken instanceof ActivationToken)) {
+    // Only NOT create li if previous is a bullet
+    if (!(prevToken instanceof BulletToken)) {
       this.createNewLI({ onlyWhenNull: false });
     }
 
-    const space = prevToken instanceof ConditionToken || prevToken instanceof ActivationToken ? ' ' : '';
-    const clazz =
-      prevToken instanceof ConditionToken || prevToken instanceof ActivationToken
-        ? 'effect-chainable'
-        : 'effect-inherent';
-    const span = utils.htmlToElement(`<span class="${clazz}">${space}${currToken.getText()}</span>`);
-
+    const span = utils.htmlToElement(`<span class="effect-inherent"> ${currToken.getText()}</span>`);
     this.currLi!.appendChild(span);
   }
 
   private handleQuickEffect(currToken: QuickEffectToken, prevToken: ActivationToken | null) {
     this.createNewOList({ onlyWhenNull: true });
 
-    // Create a new li if previous is not a condition
-    if (!(prevToken instanceof ConditionToken)) {
+    // Create a new li if previous is not a condition or a bullet
+    if (!(prevToken instanceof ConditionToken || prevToken instanceof BulletToken)) {
       this.createNewLI({ onlyWhenNull: false });
     }
 
@@ -138,6 +154,14 @@ export class CardTextRenderer {
     this.createNewLI({ onlyWhenNull: false }); // Always create
 
     const span = utils.htmlToElement(`<span class="parenthesis">${currToken.getText()}</span>`);
+    this.currLi!.appendChild(span);
+  }
+
+  private handleBullet(currToken: BulletToken) {
+    this.createNewOList({ onlyWhenNull: true });
+    this.createNewLI({ onlyWhenNull: false }); // Always create
+
+    const span = utils.htmlToElement(`<span class="bullet">${currToken.getText()} </span>`);
     this.currLi!.appendChild(span);
   }
 

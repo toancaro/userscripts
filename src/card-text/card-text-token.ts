@@ -23,8 +23,14 @@ export class ActivationToken extends TokenBase {}
 
 /**
  * negate the effects of that face-up monster your opponent controls, until the end of this turn.
+ * (text comes after condition or activation)
  */
-export class EffectToken extends TokenBase {}
+export class ChainableEffectToken extends TokenBase {}
+
+/**
+ * Text does not come after condition or activation.
+ */
+export class InherentEffectToken extends TokenBase {}
 
 /**
  * [Pendulum Effect]
@@ -61,6 +67,12 @@ export class QuickEffectToken extends TokenBase {
   public constructor() {
     // No semicolon after this because we want to make this color diferently, while keep the ':' color as effect text.
     super('(Quick Effect)');
+  }
+}
+
+export class BulletToken extends TokenBase {
+  public constructor() {
+    super('●');
   }
 }
 

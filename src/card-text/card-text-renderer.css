@@ -30,6 +30,10 @@
   color: rgb(137 144 238);
 }
 
+.card-desc-custom .bullet {
+  color: rgb(74 120 202);
+}
+
 .card-desc-custom .pendulum-effect,
 .card-desc-custom .monster-effect,
 .card-desc-custom .monster-flavor {

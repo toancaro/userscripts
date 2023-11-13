@@ -2,8 +2,10 @@ import { PREFIX_MATERIALS } from '../utils/constants';
 import { logger } from '../utils/logger';
 import {
   ActivationToken,
+  BulletToken,
+  ChainableEffectToken,
   ConditionToken,
-  EffectToken,
+  InherentEffectToken,
   MaterialsToken,
   MonsterEffectToken,
   MonsterFlavorToken,
@@ -51,6 +53,10 @@ export class CardTextProcessor {
       else if (currText.startsWith('(') && !/^\(\s*Quick\s+Effect\s*\)/i.test(currText)) {
         this.handleParenthesis(currText, tokens);
       }
+      // Bullet ●
+      else if (currText.startsWith('●')) {
+        this.handleBullet(tokens, currText);
+      }
       // Condition + quick effect
       else if (currText.endsWith(':')) {
         this.handleCondition(tokens, currText);
@@ -59,9 +65,9 @@ export class CardTextProcessor {
       else if (currText.endsWith(';')) {
         tokens.push(new ActivationToken(currText));
       }
-      // EFfect
+      // Effect
       else if (currText.endsWith('.')) {
-        tokens.push(new EffectToken(currText));
+        this.handleEffect(tokens, currText);
       }
       // We need to render every text no matter what
       else {
@@ -70,6 +76,25 @@ export class CardTextProcessor {
     }
 
     return tokens;
+  }
+
+  private handleEffect(tokens: TokenBase[], currText: string) {
+    const prevToken = tokens[tokens.length - 1];
+
+    if (prevToken instanceof ConditionToken || prevToken instanceof ActivationToken) {
+      tokens.push(new ChainableEffectToken(currText));
+    } else {
+      tokens.push(new InherentEffectToken(currText));
+    }
+  }
+
+  private handleBullet(tokens: TokenBase[], currText: string) {
+    tokens.push(new BulletToken());
+
+    const newText = currText.replace(/\s*●\s*/, '').trim();
+    if (newText) {
+      this.cardTexts.unshift(newText);
+    }
   }
 
   private handleCondition(tokens: TokenBase[], currText: string) {
