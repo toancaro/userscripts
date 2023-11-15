@@ -44,7 +44,7 @@ const config: Configuration = {
           // ==UserScript==
           // @name         MDM: Card Text Highlight
           // @namespace    http://toancaro.com
-          // @version      0.1
+          // @version      1.0
           // @description  Add highlight colors to card text.
           // @author       toancaro
           // @match        https://*.masterduelmeta.com/*
