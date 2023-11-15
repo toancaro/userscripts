@@ -46,7 +46,7 @@ const config: Configuration = {
           // @namespace    https://github.com/toancaro/userscripts
           // @homepageURL  https://github.com/toancaro/userscripts
           // @source       https://github.com/toancaro/userscripts
-          // @version      1.3
+          // @version      1.4
           // @description  Add highlight colors to card text.
           // @author       toancaro
           // @match        https://*.masterduelmeta.com/*
@@ -58,6 +58,7 @@ const config: Configuration = {
           // @supportURL   https://github.com/toancaro/userscripts/issues
           // @updateURL    https://raw.githubusercontent.com/toancaro/userscripts/main/lib/cardTextHighlight.js
           // @downloadURL  https://raw.githubusercontent.com/toancaro/userscripts/main/lib/cardTextHighlight.js
+          // @changelogURL https://github.com/toancaro/userscripts/releases/tag/v1.4
           // ==/UserScript==
         `;
 
