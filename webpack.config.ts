@@ -46,7 +46,7 @@ const config: Configuration = {
           // @namespace    https://github.com/toancaro/userscripts
           // @homepageURL  https://github.com/toancaro/userscripts
           // @source       https://github.com/toancaro/userscripts
-          // @version      1.2
+          // @version      1.3
           // @description  Add highlight colors to card text.
           // @author       toancaro
           // @match        https://*.masterduelmeta.com/*
