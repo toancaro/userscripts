@@ -3,11 +3,13 @@ import webpack, { Configuration } from 'webpack';
 
 const config: Configuration = {
   mode: 'development',
-  entry: './src/index.ts',
+  entry: {
+    cardTextHighlight: './src/card-text-highlight.index.ts',
+  },
   devtool: 'eval-cheap-module-source-map',
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'index.js',
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -37,7 +39,8 @@ const config: Configuration = {
   plugins: [
     new webpack.BannerPlugin({
       banner(data) {
-        const text = `
+        if (data.chunk.name === 'cardTextHighlight') {
+          const text = `
           // ==UserScript==
           // @name         MDM: Card Text Highlight
           // @namespace    http://toancaro.com
@@ -50,17 +53,23 @@ const config: Configuration = {
           // @grant        GM.notification
           // @grant        unsafeWindow
           // @run-at       document-idle
+          // @supportURL   https://github.com/toancaro/userscripts/issues
+          // @updateURL    https://raw.githubusercontent.com/toancaro/userscripts/main/lib/cardTextHighlight.js
+          // @downloadURL  https://raw.githubusercontent.com/toancaro/userscripts/main/lib/cardTextHighlight.js
           // ==/UserScript==
         `;
 
-        // @require      https://code.jquery.com/jquery-3.7.1.slim.min.js#sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=
-        // @require      https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js#sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==
+          // @require      https://code.jquery.com/jquery-3.7.1.slim.min.js#sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=
+          // @require      https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js#sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==
 
-        return text
-          .trim()
-          .split('\n')
-          .map((line) => line.trim())
-          .join('\n');
+          return text
+            .trim()
+            .split('\n')
+            .map((line) => line.trim())
+            .join('\n');
+        }
+
+        return '';
       },
     }),
   ],
