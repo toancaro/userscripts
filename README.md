@@ -18,7 +18,7 @@ https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmp
    
 2. Navigate to Utilities tab, scroll down to "Import from URL", paste this URL into the textbox, then click "Install"
    
-   https://raw.githubusercontent.com/toancaro/userscripts/main/lib/cardTextHighlight.js
+   https://raw.githubusercontent.com/toancaro/userscripts/main/lib/mdm.js
 
    **IMPORTANT**: ONLY INSTALL SCRIPTS FROM THE SOURCES YOU TRUST!!!
    You can find source code of above script from this Github repository.
