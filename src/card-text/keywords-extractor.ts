@@ -5,31 +5,86 @@ const KEYWORDS: string[] = [
   '(quick effect)',
   //
   'add',
+  'adds',
   'added',
+  'adding',
   //
   'banish',
+  'banishs',
   'banished',
   'banishing',
   //
+  'change',
+  'changes',
+  'changed',
+  'changing',
+  //
   'destroy',
+  'destroys',
   'destroyed',
+  'destroying',
   //
   'discard',
+  'discards',
+  'discarded',
+  'discarding',
+  //
+  'draw',
+  'draws',
+  'drawed',
+  'drawing',
+  //
+  'fusion summon',
+  'fusion summons',
+  'fusion summoned',
+  'fusion summoning',
+  //
+  'link summon',
+  'link summons',
+  'link summoned',
+  'link summoning',
   //
   'negate',
+  'negates',
+  'negated',
+  'negating',
+  //
+  'place',
+  'places',
+  'placed',
+  'placing',
   //
   'return',
+  'returns',
+  'returned',
+  'returning',
   //
   'send',
   'sent',
+  'sends',
+  'sending',
+  //
+  'set',
+  //
+  'shuffle',
+  'shuffles',
+  'shuffled',
+  'shuffling',
   //
   'special summon',
   'special summons',
   'special summoned',
+  'special summoning',
+  //
+  'synchro summon',
+  'synchro summons',
+  'synchro summoned',
+  'synchro summoning',
   //
   'target',
   'targets',
   'targeted',
+  'targeting',
 ].sort((a, b) => {
   if (a.length - b.length !== 0) return b.length - a.length; // Longer first
   return a.localeCompare(b); // Then a-z
