@@ -1,9 +1,9 @@
-import { CardTextProcessor } from '../card-text/card-text-processor';
-import { CardTextRenderer } from '../card-text/card-text-renderer';
 import styles from '../card-text/card-text-renderer.css';
+import { CardText } from '../card-text/text-elements/02.card-text';
 import { assertIsDefined } from '../utils/assertion';
 import { PREFIX_MATERIALS } from '../utils/constants';
 import { logger } from '../utils/logger';
+import { utils } from '../utils/utils';
 
 export class CardPopupWatcher {
   private readonly observer: MutationObserver;
@@ -60,11 +60,14 @@ export class CardPopupWatcher {
       });
     });
 
-    const tokens = new CardTextProcessor(cardTexts).process();
-    logger.debug('Tokens', tokens);
+    cardDescContainer.textContent = null;
+    cardDescContainer.classList.add('card-desc-custom');
 
-    const renderer = new CardTextRenderer(cardDescContainer, tokens);
-    renderer.render();
+    const cardText = new CardText(cardTexts);
+    const children = utils.htmlToElements(cardText.render());
+    children.forEach((child) => {
+      cardDescContainer.appendChild(child);
+    });
   }
 
   public static start(): CardPopupWatcher | undefined {

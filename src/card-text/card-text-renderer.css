@@ -7,24 +7,54 @@
   font-style: italic;
 }
 
-.card-desc-custom ol {
+/* ol */
+.card-desc-custom .effect-list {
   padding-left: 14px;
 }
 
-.card-desc-custom li {
+.card-desc-custom .effect-list > li {
   padding-bottom: 5px;
 }
 
+/* ul */
+.card-desc-custom .effect-item {
+  padding-left: 14px;
+  list-style: disc;
+}
+
+.card-desc-custom .effect-item > li {
+  padding-bottom: 2px;
+}
+
+.card-desc-custom .condition,
+.card-desc-custom .activation,
+.card-desc-custom .effect-chainable {
+  display: block;
+
+  /* Box highlight */
+  /* border-width: 1px;
+  border-style: groove;
+  border-left-width: 3px;
+  border-left-style: solid;
+  padding: 2px 3px 2px 5px; */
+
+  border-left-width: 2px;
+  border-left-style: solid;
+  padding-left: 5px;
+
+  margin-bottom: 4px;
+}
+
 .card-desc-custom .condition {
-  color: #3abf38; /* green */
+  border-color: #3abf38; /* green */
 }
 
 .card-desc-custom .activation {
-  color: #c322a3; /* pink */
+  border-color: rgb(219 45 185); /* pink */
 }
 
 .card-desc-custom .effect-chainable {
-  color: #bfb438; /* yellow */
+  border-color: #aea433; /* yellow */
 }
 
 .card-desc-custom .quick-effect {
@@ -35,8 +65,8 @@
   color: rgb(74 120 202);
 }
 
-.card-desc-custom .pendulum-effect,
-.card-desc-custom .monster-effect,
-.card-desc-custom .monster-flavor {
+.card-desc-custom .header-pendulum-effect,
+.card-desc-custom .header-monster-effect,
+.card-desc-custom .header-monster-flavor {
   color: rgb(255, 255, 255);
 }

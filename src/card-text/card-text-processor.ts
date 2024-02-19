@@ -1,20 +1,20 @@
 import { PREFIX_MATERIALS } from '../utils/constants';
 import { logger } from '../utils/logger';
 import {
-  ActivationToken,
+  ActivationText,
   BulletToken,
-  ChainableEffectToken,
-  ConditionToken,
-  InherentEffectToken,
-  MaterialsToken,
-  MonsterEffectToken,
-  MonsterFlavorToken,
-  ParenthesisToken,
-  PendulumEffectToken,
-  QuickEffectToken,
-  TokenBase,
+  ChainableEffectText,
+  ConditionText,
+  InherentEffectText,
+  ParenthesisText,
+  PendulumEffectText,
+  QuickEffectText,
   UnknownToken,
-} from './card-text-token';
+} from './text-elements/02.card-text';
+import { HeaderMonsterFlavorText } from './text-elements/header-monster-flavor-text';
+import { MonsterEffectText } from './text-elements/header-monster-effect-text';
+import { MaterialsText } from './text-elements/materials-text';
+import { TextElementBase } from './text-elements/01.text-element';
 
 export class CardTextProcessor {
   private readonly cardTexts: string[];
@@ -28,8 +28,8 @@ export class CardTextProcessor {
     return cardTexts.map((text) => text.trim());
   }
 
-  public process(): TokenBase[] {
-    const tokens: TokenBase[] = [];
+  public process(): TextElementBase[] {
+    const tokens: TextElementBase[] = [];
 
     while (this.cardTexts.length > 0) {
       const currText = this.cardTexts.shift()!;
@@ -63,7 +63,7 @@ export class CardTextProcessor {
       }
       // Activation
       else if (currText.endsWith(';')) {
-        tokens.push(new ActivationToken(currText));
+        tokens.push(new ActivationText(currText));
       }
       // Effect
       else if (currText.endsWith('.')) {
@@ -78,17 +78,17 @@ export class CardTextProcessor {
     return tokens;
   }
 
-  private handleEffect(tokens: TokenBase[], currText: string) {
+  private handleEffect(tokens: TextElementBase[], currText: string) {
     const prevToken = tokens[tokens.length - 1];
 
-    if (prevToken instanceof ConditionToken || prevToken instanceof ActivationToken) {
-      tokens.push(new ChainableEffectToken(currText));
+    if (prevToken instanceof ConditionText || prevToken instanceof ActivationText) {
+      tokens.push(new ChainableEffectText(currText));
     } else {
-      tokens.push(new InherentEffectToken(currText));
+      tokens.push(new InherentEffectText(currText));
     }
   }
 
-  private handleBullet(tokens: TokenBase[], currText: string) {
+  private handleBullet(tokens: TextElementBase[], currText: string) {
     tokens.push(new BulletToken());
 
     const newText = currText.replace(/\s*●\s*/, '').trim();
@@ -97,25 +97,25 @@ export class CardTextProcessor {
     }
   }
 
-  private handleCondition(tokens: TokenBase[], currText: string) {
+  private handleCondition(tokens: TextElementBase[], currText: string) {
     const regex = /(.*)\(Quick\s+Effect\)(.*)/i;
     const matches = regex.exec(currText);
 
     if (matches) {
       if (matches[1]) {
-        tokens.push(new ConditionToken(matches[1]));
+        tokens.push(new ConditionText(matches[1]));
       }
-      tokens.push(new QuickEffectToken());
+      tokens.push(new QuickEffectText());
       // Must have ':'
       if (matches[2]) {
-        tokens.push(new ConditionToken(matches[2]));
+        tokens.push(new ConditionText(matches[2]));
       }
     } else {
-      tokens.push(new ConditionToken(currText));
+      tokens.push(new ConditionText(currText));
     }
   }
 
-  private handleParenthesis(currText: string, tokens: TokenBase[]) {
+  private handleParenthesis(currText: string, tokens: TextElementBase[]) {
     let newText = currText;
 
     while (
@@ -130,11 +130,11 @@ export class CardTextProcessor {
       newText += ' ' + nextText;
     }
 
-    tokens.push(new ParenthesisToken(newText));
+    tokens.push(new ParenthesisText(newText));
   }
 
-  private handlePendulumEffect(tokens: TokenBase[], currText: string) {
-    tokens.push(new PendulumEffectToken());
+  private handlePendulumEffect(tokens: TextElementBase[], currText: string) {
+    tokens.push(new PendulumEffectText());
 
     const newText = currText.replace(/\[\s*Pendulum\s?Effect\s*\]\s*/i, '').trim();
     if (newText) {
@@ -142,8 +142,8 @@ export class CardTextProcessor {
     }
   }
 
-  private handleMonsterFlavor(tokens: TokenBase[], currText: string) {
-    tokens.push(new MonsterFlavorToken());
+  private handleMonsterFlavor(tokens: TextElementBase[], currText: string) {
+    tokens.push(new HeaderMonsterFlavorText());
 
     const newText = currText.replace(/\[\s*Flavor\s?Text\s*\]\s*/i, '').trim();
     if (newText) {
@@ -151,8 +151,8 @@ export class CardTextProcessor {
     }
   }
 
-  private handleMonsterEffect(tokens: TokenBase[], currText: string) {
-    tokens.push(new MonsterEffectToken());
+  private handleMonsterEffect(tokens: TextElementBase[], currText: string) {
+    tokens.push(new MonsterEffectText());
 
     const newText = currText.replace(/\[\s*Monster\s?Effect\s*\]\s*/i, '').trim();
     if (newText) {
@@ -160,7 +160,7 @@ export class CardTextProcessor {
     }
   }
 
-  private handlePrefixMaterials(currText: string, tokens: TokenBase[]) {
+  private handlePrefixMaterials(currText: string, tokens: TextElementBase[]) {
     const newText = currText.replace(PREFIX_MATERIALS, '');
 
     // [ Monster Effect ] 1 Tuner + 1+ non-Tuner monsters
@@ -169,10 +169,10 @@ export class CardTextProcessor {
 
     // Plunder Patrollship Jord
     if (matches) {
-      tokens.push(new MonsterEffectToken());
-      tokens.push(new MaterialsToken(matches[2]));
+      tokens.push(new MonsterEffectText());
+      tokens.push(new MaterialsText(matches[2]));
     } else {
-      tokens.push(new MaterialsToken(newText));
+      tokens.push(new MaterialsText(newText));
     }
   }
 }
