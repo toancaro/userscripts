@@ -57,6 +57,10 @@
   border-color: #aea433; /* yellow */
 }
 
+.card-desc-custom .keyword {
+  color: rgb(137 144 238);
+}
+
 .card-desc-custom .quick-effect {
   color: rgb(137 144 238);
 }

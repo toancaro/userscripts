@@ -38,11 +38,12 @@ export class EffectListText extends CompositeTextElement {
           if (text.endsWith(')' || text.endsWith(').'))) break;
         }
 
+        // TODO: not highlight this
         this.addChild(new EffectItemText(texts));
       }
       // Single sentence, no : or ;
       else if (currText.endsWith('.') || currText.endsWith(')')) {
-        this.addChild(new PlainTextElement(currText));
+        this.addChild(new EffectItemText([currText]));
       }
       // Something went wrong
       else {

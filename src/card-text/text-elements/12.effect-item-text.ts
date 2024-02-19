@@ -1,3 +1,4 @@
+import { extractKeywords } from '../keywords-extractor';
 import { CompositeTextElement, PlainTextElement } from './01.text-element';
 import { ConditionText } from './13.condition-text';
 import { ActivationText } from './14.activation-text';
@@ -13,34 +14,35 @@ export class EffectItemText extends CompositeTextElement {
   }
 
   private processTexts(): void {
-    this.texts.forEach((text) => {
-      // Condition
-      if (text.endsWith(':')) {
-        this.addChild(new ConditionText(text));
-      }
-      // Activation
-      else if (text.endsWith(';')) {
-        this.addChild(new ActivationText(text));
-      }
-      // Chainable effect
-      else if (text.endsWith('.')) {
-        this.addChild(new EffectChainableText(text));
-      }
-      // Error
-      else {
-        throw new Error('Unknown type of text');
-      }
-    });
+    const isChainableEffect = this.texts.some((text) => text.endsWith(':') || text.endsWith(';'));
+
+    // Condition - Activation - Chainable effect
+    if (isChainableEffect) {
+      this.texts.forEach((text) => {
+        // Condition
+        if (text.endsWith(':')) {
+          this.addChild(new ConditionText(text));
+        }
+        // Activation
+        else if (text.endsWith(';')) {
+          this.addChild(new ActivationText(text));
+        }
+        // Chainable effect
+        else if (text.endsWith('.')) {
+          this.addChild(new EffectChainableText(text));
+        }
+        // Error
+        else {
+          throw new Error('Unknown type of text');
+        }
+      });
+    }
+    // Inherent effect
+    else {
+      this.texts.forEach((text) => {
+        const children = extractKeywords(text);
+        children.forEach((child) => this.addChild(child));
+      });
+    }
   }
-
-  // public render(): string {
-  //   let result = `<ul class="effect-item">`;
-
-  //   this.getChild().forEach((child) => {
-  //     result += `<li>${child.render()}</li>`;
-  //   });
-
-  //   result += `</ul>`;
-  //   return result;
-  // }
 }

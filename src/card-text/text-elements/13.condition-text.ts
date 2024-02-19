@@ -1,3 +1,4 @@
+import { extractKeywords } from '../keywords-extractor';
 import { CompositeTextElement, PlainTextElement } from './01.text-element';
 
 /**
@@ -6,12 +7,11 @@ import { CompositeTextElement, PlainTextElement } from './01.text-element';
 export class ConditionText extends CompositeTextElement {
   public constructor(private readonly text: string) {
     super([]);
-    this.processText();
   }
 
-  private processText(): void {}
-
   public render(): string {
-    return `<span class="condition">${this.text}</span>`;
+    const children = extractKeywords(this.text);
+    const childrenHtml = children.map((child) => child.render()).join('');
+    return `<span class="condition">${childrenHtml}</span>`;
   }
 }

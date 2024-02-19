@@ -1,3 +1,4 @@
+import { extractKeywords } from '../keywords-extractor';
 import { CompositeTextElement, PlainTextElement } from './01.text-element';
 
 /**
@@ -12,6 +13,8 @@ export class ActivationText extends CompositeTextElement {
   private processText(): void {}
 
   public render(): string {
-    return `<span class="activation">${this.text}</span>`;
+    const children = extractKeywords(this.text);
+    const childrenHtml = children.map((child) => child.render()).join('');
+    return `<span class="activation">${childrenHtml}</span>`;
   }
 }
